@@ -7,6 +7,7 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
+const config = require('./config');
 
 // Create a http server to handle all request
 const httpServer = http.createServer((req, res) => {
@@ -14,8 +15,8 @@ const httpServer = http.createServer((req, res) => {
 });
 
 // Start http server
-httpServer.listen(3000, () => {
-	console.log("The server is listening on port " + 3000);
+httpServer.listen(config.port, () => {
+	console.log(`The server is listening on port ${ config.port }`);
 });
 
 // Server block
@@ -42,8 +43,6 @@ let initiateServer = (req, res) => {
 			'payload': buffer
 		};
 
-		console.log("Req method", typeof(router[data.method]), typeof(router[data.trimmedPath]));
-
 		// Choose a handler for this request
 		let chosenHandler = typeof(router[data.method]) !== 'undefined' && typeof(router[data.method][data.trimmedPath]) !== 'undefined' ? router[data.method][data.trimmedPath] : handlers.notFound;
 
@@ -64,7 +63,7 @@ let initiateServer = (req, res) => {
 			res.end(payloadString);
 
 			//Log the request path
-			console.log('Returning this response: ', statusCode, payloadString);
+			console.log(`Returning this response: ${statusCode} , ${payloadString}`);
 		});
 
 	});
